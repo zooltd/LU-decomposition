@@ -24,7 +24,7 @@ void validate(double *A, const int *P, const double *A_cp);
 
 int main(int argc, char **argv) {
     if (argc != 3 && argc != 4)
-        throw std::invalid_argument("./lu-omp [matrix size] [number of threads] [block size](optional)(200 by default)");
+        throw std::invalid_argument("./lu [matrix size] [number of threads] [block size](optional)(200 by default)");
 
     msz = (int) std::stol(argv[1]);
     int num_threads = (int) std::stol(argv[2]);
