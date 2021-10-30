@@ -6,6 +6,7 @@
 #include <omp.h>
 #include <random>
 #include <stdexcept>
+
 #define ZERO 1e-5
 
 /* matrix size */
@@ -131,18 +132,14 @@ void blocked_lu(double *A, int *P, double ***blocks, double *buf) {
         /* cal blocks[k,k:]*/
         /* blocks[k][j] = L(blocks[k][k]) * blocks[k][j] */
         for (int j = k + 1; j < nb; j++)
-#pragma omp task depend(inout                     \
-                        : blocks[k][j]) depend(in \
-                                               : blocks[k][k])
+#pragma omp task depend(inout : blocks[k][j])
             cal_row(blocks[k][j], blocks[k][k]);
 
         /* update blocks[k+bsz:,k+bsz:]*/
         /* blocks[ii][jj] -= blocks[ii][k] * blocks[k][jj] */
         for (int ii = k + 1; ii < nb; ii++)
             for (int jj = k + 1; jj < nb; jj++)
-#pragma omp task depend(inout                       \
-                        : blocks[ii][jj]) depend(in \
-                                                 : blocks[k][jj], blocks[ii][k])
+#pragma omp task depend(inout : blocks[ii][jj]) depend(in : blocks[k][jj])
                 cal_sub_matrix(blocks[ii][jj], blocks[ii][k], blocks[k][jj]);
 #pragma omp taskwait
     }
@@ -265,8 +262,7 @@ double l21_norm(double *A, const double *LU) {
             A[IDX(i, j)] -= LU[IDX(i, j)];
 
     double norm = 0.0;
-#pragma omp parallel for schedule(static) reduction(+ \
-                                                    : norm)
+#pragma omp parallel for schedule(static) reduction(+ : norm)
     for (int col = 0; col < msz; ++col) {
         double ans = 0.0;
         for (int row = 0; row < msz; ++row)
