@@ -133,7 +133,7 @@ void blocked_lu(double *A, int *P, double ***blocks, double *buf) {
         /* blocks[k][j] = L(blocks[k][k]) * blocks[k][j] */
         for (int j = k + 1; j < nb; j++)
 #pragma omp task depend(inout : blocks[j][k])
-            cal_row(blocks[j][k], blocks[k][k]);
+            cal_col(blocks[j][k], blocks[k][k]);
 
         /* cal blocks[k,k+bsz:]*/
         /* blocks[k][j] = L(blocks[k][k]) * blocks[k][j] */
