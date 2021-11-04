@@ -3,6 +3,7 @@ Block LU decomposition using OpenMP
 
 Performance on Intel(R) Xeon(R) CPU E5-2650 v2 @ 2.60GHz
 
+Matrix size: 8000, block size: 64
 
 | # Threads | Run Time(s) | Speedup | Parallel Efficiency |
 | --------- | ----------: | ------: | ------------------: |
